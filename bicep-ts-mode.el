@@ -6,6 +6,7 @@
 ;; Maintainer : Jostein Kjønigsen <jostein@kjonigsen.net>
 ;; Created    : December 2023
 ;; Keywords   : bicep languages tree-sitter
+;; Version    : 0.1
 
 ;; This file is part of GNU Emacs.
 
