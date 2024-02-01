@@ -6,7 +6,8 @@
 ;; Maintainer : Jostein Kjønigsen <jostein@kjonigsen.net>
 ;; Created    : December 2023
 ;; Keywords   : bicep languages tree-sitter
-;; Version    : 0.1
+;; Version    : 0.1.0
+;; X-URL      : https://github.com/josteink/bicep-ts-mode
 
 ;; This file is part of GNU Emacs.
 
@@ -172,8 +173,11 @@ Return nil if there is no name or if NODE is not a defun node."
 
     (treesit-major-mode-setup)))
 
+;;;###autoload
 (if (treesit-ready-p 'bicep)
-    (add-to-list 'auto-mode-alist '("\\.bicep\\'" . bicep-ts-mode)))
+    (progn
+      (add-to-list 'auto-mode-alist '("\\.bicep\\'" . bicep-ts-mode))
+      (add-to-list 'auto-mode-alist '("\\.bicepparam\\'" . bicep-ts-mode))))
 
 (provide 'bicep-ts-mode)
 
