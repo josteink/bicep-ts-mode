@@ -6,7 +6,7 @@
 ;; Maintainer : Jostein Kjønigsen <jostein@kjonigsen.net>
 ;; Created    : December 2023
 ;; Keywords   : bicep languages tree-sitter
-;; Version    : 0.1.0
+;; Version    : 0.1.1
 ;; X-URL      : https://github.com/josteink/bicep-ts-mode
 
 ;; This file is part of GNU Emacs.
