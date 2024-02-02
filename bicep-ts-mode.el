@@ -65,7 +65,7 @@
   '("var" "param" "resource"
     "module" "type" "metadata"
     "targetScope" "output"
-    "for" "in")
+    "for" "in" "using")
   "Bicep keywords for tree-sitter font-locking.")
 
 (defvar bicep-ts-mode--font-lock-settings
