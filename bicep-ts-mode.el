@@ -1,6 +1,6 @@
 ;;; bicep-ts-mode.el --- tree-sitter support for Bicep  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2023-2023 Free Software Foundation, Inc.
+;; Copyright (C) 2023-2024 Free Software Foundation, Inc.
 
 ;; Author     : Jostein Kjønigsen <jostein@kjonigsen.net>
 ;; Maintainer : Jostein Kjønigsen <jostein@kjonigsen.net>
@@ -40,12 +40,11 @@
 
 (defcustom bicep-ts-mode-indent-offset 2
   "Number of spaces for each indentation step in `bicep-ts-mode'."
-  :version "29.1"
   :type 'natnum
   :safe 'natnump
   :group 'bicep)
 
-(defvar bicep-ts-mode--syntax-table
+(defvar bicep-ts-mode-syntax-table
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?=  "."   table)
     (modify-syntax-entry ?\' "\""  table)
@@ -136,7 +135,6 @@ Return nil if there is no name or if NODE is not a defun node."
 (define-derived-mode bicep-ts-mode prog-mode "Bicep"
   "Major mode for editing BICEP, powered by tree-sitter."
   :group 'bicep-mode
-  :syntax-table bicep-ts-mode--syntax-table
 
   (when (treesit-ready-p 'bicep)
     (treesit-parser-create 'bicep)
@@ -174,10 +172,11 @@ Return nil if there is no name or if NODE is not a defun node."
     (treesit-major-mode-setup)))
 
 ;;;###autoload
-(if (treesit-ready-p 'bicep)
+(and (fboundp 'treesit-ready-p)
+     (treesit-ready-p 'bicep)
     (progn
-      (add-to-list 'auto-mode-alist '("\\.bicep\\'" . bicep-ts-mode))
-      (add-to-list 'auto-mode-alist '("\\.bicepparam\\'" . bicep-ts-mode))))
+       (add-to-list 'auto-mode-alist '("\\.bicep\\(param\\)?\\'"
+                                       . bicep-ts-mode))))
 
 (provide 'bicep-ts-mode)
 
