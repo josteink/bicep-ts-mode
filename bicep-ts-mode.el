@@ -38,6 +38,10 @@
 (declare-function treesit-node-child "treesit.c")
 (declare-function treesit-node-child-by-field-name "treesit.c")
 
+(defgroup bicep nil
+  "Major-mode for editing Bicep-files"
+  :group 'languages)
+
 (defcustom bicep-ts-mode-indent-offset 2
   "Number of spaces for each indentation step in `bicep-ts-mode'."
   :type 'natnum
@@ -67,62 +71,51 @@
     "for" "in" "using")
   "Bicep keywords for tree-sitter font-locking.")
 
-(defvar bicep-ts-mode--font-lock-settings
-  (treesit-font-lock-rules
-   :language 'bicep
-   :feature 'comment
-   '((comment) @font-lock-comment-face)
+(setq bicep-ts-mode--font-lock-settings
+      (treesit-font-lock-rules
+       :language 'bicep
+       :feature 'comment
+       '((comment) @font-lock-comment-face)
 
-   :language 'bicep
-   :feature 'delimiter
-   '(("=") @font-lock-delimiter-face)
+       :language 'bicep
+       :feature 'delimiter
+       '(("=") @font-lock-delimiter-face)
 
-   :language 'bicep
-   :feature 'keyword
-   `([,@bicep-ts-mode--keywords] @font-lock-keyword-face)
+       :language 'bicep
+       :feature 'keyword
+       `([,@bicep-ts-mode--keywords] @font-lock-keyword-face)
 
-   :language 'bicep
-   :feature 'definition
-   '((parameter_declaration
-      (identifier) @font-lock-variable-name-face
-      (type) @font-lock-type-face)
-     (variable_declaration
-      (identifier) @font-lock-variable-name-face)
-     (resource_declaration
-      (identifier) @font-lock-variable-name-face)
-     (module_declaration
-      (identifier) @font-lock-variable-name-face)
-     (type_declaration
-      (identifier) @font-lock-type-face)
-     ((builtin_type) @font-lock-type-face)
-     (output_declaration
-      (identifier) @font-lock-variable-name-face)
-     (output_declaration
-      (type) @font-lock-type-face))
+       :language 'bicep
+       :feature 'definition
+       '((type) @font-lock-type-face
+         (parameter_declaration
+          (identifier)) @font-lock-variable-name-face
+         )
 
-   :language 'bicep
-   :feature 'number
-   '((number)
-     @font-lock-number-face)
+       :language 'bicep
+       :feature 'number
+       '((number)
+         @font-lock-number-face)
 
-   :language 'bicep
-   :feature 'string
-   '((string_content) @font-lock-string-face)
+       :language 'bicep
+       :feature 'string
+       '((string_content) @font-lock-string-face)
 
-   :language 'bicep
-   :feature 'boolean
-   '((boolean) @font-lock-constant-face)
+       :language 'bicep
+       :feature 'boolean
+       '((boolean) @font-lock-constant-face)
 
-   :language 'bicep
-   :feature 'functions
-   '((call_expression
-      function: (identifier) @font-lock-function-name-face))
+       :language 'bicep
+       :feature 'functions
+       '((call_expression
+          function: (identifier) @font-lock-function-name-face))
 
-   :language 'bicep
-   :feature 'error
-   :override t
-   '((ERROR) @font-lock-warning-face))
-  "Font-lock settings for BICEP.")
+       :language 'bicep
+       :feature 'error
+       :override t
+       '((ERROR) @font-lock-warning-face))
+      ;;"Font-lock settings for BICEP."
+      )
 
 (defun bicep-ts-mode--defun-name (node)
   "Return the defun name of NODE.
@@ -174,7 +167,7 @@ Return nil if there is no name or if NODE is not a defun node."
 ;;;###autoload
 (and (fboundp 'treesit-ready-p)
      (treesit-ready-p 'bicep)
-    (progn
+     (progn
        (add-to-list 'auto-mode-alist '("\\.bicep\\(param\\)?\\'"
                                        . bicep-ts-mode))))
 
