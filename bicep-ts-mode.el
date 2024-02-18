@@ -102,6 +102,8 @@
           (identifier) @font-lock-variable-name-face)
          (for_statement
           (identifier) @font-lock-variable-name-face)
+         (output_declaration
+          (identifier) @font-lock-variable-name-face)
          )
 
        :language 'bicep
@@ -153,7 +155,8 @@ Return nil if there is no name or if NODE is not a defun node."
     ;; Navigation.
     (setq-local treesit-defun-type-regexp
                 (rx (or "module_declaration" "type_declaration" "variable_declaration"
-                        "parameter_declaration" "resource_declaration" "output_declaration")))
+                        "parameter_declaration" "resource_declaration" "output_declaration"
+                        "function_declaration")))
     (setq-local treesit-defun-name-function #'bicep-ts-mode--defun-name)
 
     ;; Font-lock.
@@ -167,9 +170,10 @@ Return nil if there is no name or if NODE is not a defun node."
     ;; Imenu.
     (setq-local treesit-simple-imenu-settings
                 '(("Modules" "\\`module_declaration\\'" nil nil)
+                  ("Functions" "\\`user_defined_function\\'" nil nil)
                   ("Types" "\\`type_declaration\\'" nil nil)
-                  ("Variables" "\\`variable_declaration\\'" nil nil)
                   ("Parameters" "\\`parameter_declaration\\'" nil nil)
+                  ("Variables" "\\`variable_declaration\\'" nil nil)
                   ("Resources" "\\`resource_declaration\\'" nil nil)
                   ("Outputs" "\\`output_declaration\\'" nil nil)))
 
