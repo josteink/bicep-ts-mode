@@ -9,3 +9,7 @@
 
 # Undo-tree save-files
 *.~undo-tree
++
++# ELPA-generated files
++/bicep-ts-mode-autoloads.el
++/bicep-ts-mode-pkg.el
