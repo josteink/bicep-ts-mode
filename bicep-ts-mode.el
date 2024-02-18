@@ -71,7 +71,7 @@
     "for" "in" "using")
   "Bicep keywords for tree-sitter font-locking.")
 
-(setq bicep-ts-mode--font-lock-settings
+(defvar bicep-ts-mode--font-lock-settings
       (treesit-font-lock-rules
        :language 'bicep
        :feature 'comment
@@ -89,10 +89,18 @@
        :feature 'definition
        '((type) @font-lock-type-face
          (parameter_declaration
-          (identifier)) @font-lock-variable-name-face
+          (identifier) @font-lock-variable-name-face)
+         (variable_declaration
+          (identifier) @font-lock-variable-name-face)
+         (resource_declaration
+          (identifier) @font-lock-variable-name-face)
          (user_defined_function
           (identifier) @font-lock-function-name-face)
          (parameter
+          (identifier) @font-lock-variable-name-face)
+         (module_declaration
+          (identifier) @font-lock-variable-name-face)
+         (for_statement
           (identifier) @font-lock-variable-name-face)
          )
 
@@ -118,8 +126,7 @@
        :feature 'error
        :override t
        '((ERROR) @font-lock-warning-face))
-      ;;"Font-lock settings for BICEP."
-      )
+      "Font-lock settings for BICEP.")
 
 (defun bicep-ts-mode--defun-name (node)
   "Return the defun name of NODE.
