@@ -65,7 +65,7 @@
      ((parent-is "for_statement") parent-bol bicep-ts-mode-indent-offset))))
 
 (defvar bicep-ts-mode--keywords
-  '("var" "param" "resource"
+  '("var" "param" "resource" "func"
     "module" "type" "metadata"
     "targetScope" "output"
     "for" "in" "using")
@@ -90,6 +90,10 @@
        '((type) @font-lock-type-face
          (parameter_declaration
           (identifier)) @font-lock-variable-name-face
+         (user_defined_function
+          (identifier) @font-lock-function-name-face)
+         (parameter
+          (identifier) @font-lock-variable-name-face)
          )
 
        :language 'bicep
