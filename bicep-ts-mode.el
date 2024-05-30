@@ -146,7 +146,7 @@ Return nil if there is no name or if NODE is not a defun node."
     (treesit-parser-create 'bicep)
 
     ;; Comments
-    (setq-local comment-start "# ")
+    (setq-local comment-start "// ")
     (setq-local comment-end "")
 
     ;; Indent.
