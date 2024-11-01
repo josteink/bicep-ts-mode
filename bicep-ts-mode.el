@@ -62,7 +62,9 @@
      ((node-is "]") parent-bol 0)
      ((parent-is "array") parent-bol bicep-ts-mode-indent-offset)
      ((parent-is "object") parent-bol bicep-ts-mode-indent-offset)
-     ((parent-is "for_statement") parent-bol bicep-ts-mode-indent-offset))))
+     ((parent-is "for_statement") parent-bol bicep-ts-mode-indent-offset)
+     ((parent-is "call_expression") parent-bol bicep-ts-mode-indent-offset)
+     )))
 
 (defvar bicep-ts-mode--keywords
   '("var" "param" "resource" "func"
@@ -72,63 +74,68 @@
   "Bicep keywords for tree-sitter font-locking.")
 
 (defvar bicep-ts-mode--font-lock-settings
-      (treesit-font-lock-rules
-       :language 'bicep
-       :feature 'comment
-       '((comment) @font-lock-comment-face)
+  (treesit-font-lock-rules
+   :language 'bicep
+   :feature 'comment
+   '((comment) @font-lock-comment-face)
 
-       :language 'bicep
-       :feature 'delimiter
-       '(("=") @font-lock-delimiter-face)
+   :language 'bicep
+   :feature 'delimiter
+   '(("=") @font-lock-delimiter-face)
 
-       :language 'bicep
-       :feature 'keyword
-       `([,@bicep-ts-mode--keywords] @font-lock-keyword-face)
+   :language 'bicep
+   :feature 'keyword
+   `([,@bicep-ts-mode--keywords] @font-lock-keyword-face)
 
-       :language 'bicep
-       :feature 'definition
-       '((type) @font-lock-type-face
-         (parameter_declaration
-          (identifier) @font-lock-variable-name-face)
-         (variable_declaration
-          (identifier) @font-lock-variable-name-face)
-         (resource_declaration
-          (identifier) @font-lock-variable-name-face)
-         (user_defined_function
-          (identifier) @font-lock-function-name-face)
-         (parameter
-          (identifier) @font-lock-variable-name-face)
-         (module_declaration
-          (identifier) @font-lock-variable-name-face)
-         (for_statement
-          (identifier) @font-lock-variable-name-face)
-         (output_declaration
-          (identifier) @font-lock-variable-name-face)
-         )
+   :language 'bicep
+   :feature 'definition
+   '((type) @font-lock-type-face
+     (parameter_declaration
+      (identifier) @font-lock-variable-name-face)
+     (variable_declaration
+      (identifier) @font-lock-variable-name-face)
+     (resource_declaration
+      (identifier) @font-lock-variable-name-face)
+     (user_defined_function
+      (identifier) @font-lock-function-name-face)
+     (parameter
+      (identifier) @font-lock-variable-name-face)
+     (module_declaration
+      (identifier) @font-lock-variable-name-face)
+     (for_statement
+      (identifier) @font-lock-variable-name-face)
+     (output_declaration
+      (identifier) @font-lock-variable-name-face)
+     (object_property
+      (identifier) @font-lock-variable-name-face)
+     )
 
-       :language 'bicep
-       :feature 'number
-       '((number)
-         @font-lock-number-face)
+   :language 'bicep
+   :feature 'number
+   '((number)
+     @font-lock-number-face)
 
-       :language 'bicep
-       :feature 'string
-       '((string_content) @font-lock-string-face)
+   :language 'bicep
+   :feature 'string
+   '((string_content) @font-lock-string-face)
 
-       :language 'bicep
-       :feature 'boolean
-       '((boolean) @font-lock-constant-face)
+   :language 'bicep
+   :feature 'boolean
+   '((boolean) @font-lock-constant-face)
 
-       :language 'bicep
-       :feature 'functions
-       '((call_expression
-          function: (identifier) @font-lock-function-name-face))
+   :language 'bicep
+   :feature 'functions
+   '((call_expression
+      function: (identifier) @font-lock-function-name-face)
+     (call_expression
+      function: (member_expression (identifier)) @font-lock-function-name-face)
+     )
 
-       :language 'bicep
-       :feature 'error
-       :override t
-       '((ERROR) @font-lock-warning-face))
-      "Font-lock settings for BICEP.")
+   :language 'bicep
+   :feature 'error
+   :override t
+   '((ERROR) @font-lock-warning-face))
+  "Font-lock settings for BICEP.")
 
 (defun bicep-ts-mode--defun-name (node)
   "Return the defun name of NODE.
