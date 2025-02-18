@@ -63,7 +63,7 @@
      ((parent-is "array") parent-bol bicep-ts-mode-indent-offset)
      ((parent-is "object") parent-bol bicep-ts-mode-indent-offset)
      ((parent-is "for_statement") parent-bol bicep-ts-mode-indent-offset)
-     ((parent-is "call_expression") parent-bol bicep-ts-mode-indent-offset)
+     ((parent-is "arguments") parent-bol bicep-ts-mode-indent-offset)
      )))
 
 (defvar bicep-ts-mode--keywords
