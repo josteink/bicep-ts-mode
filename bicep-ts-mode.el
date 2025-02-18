@@ -126,7 +126,7 @@
    :language 'bicep
    :feature 'functions
    '((call_expression
-      function: (identifier) @font-lock-function-name-face)
+      function: (identifier) @font-lock-function-call-face)
      (call_expression
       function: (member_expression (identifier)) @font-lock-function-name-face)
      )
