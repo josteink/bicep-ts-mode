@@ -48,6 +48,11 @@
   :safe 'natnump
   :group 'bicep)
 
+(defcustom bicep-ts-mode-default-langserver-path "$HOME/.vscode/extensions/ms-azuretools.vscode-bicep-*/bicepLanguageServer/Bicep.LangServer.dll"
+  "Default expression used to locate Bicep Languageserver.  If found, added to eglot."
+  :type 'string
+  :group 'bicep)
+
 (defvar bicep-ts-mode-syntax-table
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?=  "."   table)
@@ -139,6 +144,10 @@
    '((ERROR) @font-lock-warning-face))
   "Font-lock settings for BICEP.")
 
+(defun bicep-langserver-path ()
+  (car (file-expand-wildcards
+        (substitute-in-file-name bicep-ts-mode-default-langserver-path))))
+
 (defun bicep-ts-mode--defun-name (node)
   "Return the defun name of NODE.
 Return nil if there is no name or if NODE is not a defun node."
@@ -197,12 +206,10 @@ Return nil if there is no name or if NODE is not a defun node."
 
 ;;;###autoload
 (and (boundp 'eglot-server-programs)
+     (file-exists-p (bicep-langserver-path))
      (progn
        (add-to-list 'eglot-server-programs
-                    `(bicep-ts-mode . ("dotnet"
-                                       ,(car (file-expand-wildcards
-                                              (substitute-in-file-name
-                                               "$HOME/.vscode/extensions/ms-azuretools.vscode-bicep-*/bicepLanguageServer/Bicep.LangServer.dll"))))))))
+                    `(bicep-ts-mode . ("dotnet" ,(bicep-langserver-path))))))
 
 (provide 'bicep-ts-mode)
 
