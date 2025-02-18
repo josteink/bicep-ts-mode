@@ -9,6 +9,9 @@ Emacs](https://www.gnu.org/software/emacs/), powered by the
 - Syntax highlighting
 - Indentation
 - Imenu-support, when LSP not configured
+- Automatic eglot-configuration, if Bicep Langserver found with
+  configurable default search-location (by default it looks for
+  location installed by VSCode Bicep-extension)
 
 ## Prerequisites
 
