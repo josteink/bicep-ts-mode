@@ -195,6 +195,15 @@ Return nil if there is no name or if NODE is not a defun node."
        (add-to-list 'auto-mode-alist '("\\.bicep\\(param\\)?\\'"
                                        . bicep-ts-mode))))
 
+;;;###autoload
+(and (boundp 'eglot-server-programs)
+     (progn
+       (add-to-list 'eglot-server-programs
+                    `(bicep-ts-mode . ("dotnet"
+                                       ,(car (file-expand-wildcards
+                                              (substitute-in-file-name
+                                               "$HOME/.vscode/extensions/ms-azuretools.vscode-bicep-*/bicepLanguageServer/Bicep.LangServer.dll"))))))))
+
 (provide 'bicep-ts-mode)
 
 ;;; bicep-ts-mode.el ends here
