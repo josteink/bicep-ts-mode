@@ -205,11 +205,11 @@ Return nil if there is no name or if NODE is not a defun node."
                                        . bicep-ts-mode))))
 
 ;;;###autoload
-(and (boundp 'eglot-server-programs)
-     (file-exists-p (bicep-langserver-path))
-     (progn
-       (add-to-list 'eglot-server-programs
-                    `(bicep-ts-mode . ("dotnet" ,(bicep-langserver-path))))))
+(eval-after-load 'eglot
+  '(and (file-exists-p (bicep-langserver-path))
+        (progn
+          (add-to-list 'eglot-server-programs
+                       `(bicep-ts-mode . ("dotnet" ,(bicep-langserver-path)))))))
 
 (provide 'bicep-ts-mode)
 
