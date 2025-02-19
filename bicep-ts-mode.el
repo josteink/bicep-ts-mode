@@ -153,9 +153,19 @@
 (defun bicep-ts-mode--defun-name (node)
   "Return the defun name of NODE.
 Return nil if there is no name or if NODE is not a defun node."
-  (treesit-node-text
-   (treesit-node-child node 1)
-   t))
+  (let ((defun-node (bicep-ts-mode--find-declaration-node node)))
+    (when defun-node
+      (treesit-node-text
+       (treesit-node-child defun-node 1)
+       t)))))
+
+(defun bicep-ts-mode--find-declaration-node (node)
+  "Recursively search up the tree from NODE for a node whose type contains 'declaration'.
+Return the first matching node, or nil if none is found."
+  (when node
+    (if (string-match-p "declaration" (treesit-node-type node))
+        node
+      (bicep-ts-mode--find-declaration-node (treesit-node-parent node)))))
 
 ;;;###autoload
 (define-derived-mode bicep-ts-mode prog-mode "Bicep"
@@ -164,7 +174,7 @@ Return nil if there is no name or if NODE is not a defun node."
 
   (if (not (treesit-ready-p 'bicep))
       (message "Please run `M-x treesit-install-language-grammar RET bicep'")
-    (treesit-parser-create 'bicep)
+    (setq treesit-primary-parser (treesit-parser-create 'bicep))
 
     ;; Comments
     (setq-local comment-start "// ")
