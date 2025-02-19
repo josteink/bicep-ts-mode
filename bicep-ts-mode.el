@@ -197,6 +197,10 @@ Return nil if there is no name or if NODE is not a defun node."
 
     (treesit-major-mode-setup)))
 
+;; Our treesit-font-lock-rules expect this version of the grammar:
+(add-to-list 'treesit-language-source-alist
+             '(bicep . ("https://github.com/tree-sitter-grammars/tree-sitter-bicep" "v1.1.0")))
+
 ;;;###autoload
 (and (fboundp 'treesit-ready-p)
      (treesit-ready-p 'bicep)
