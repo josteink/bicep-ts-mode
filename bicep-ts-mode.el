@@ -160,7 +160,8 @@ Return nil if there is no name or if NODE is not a defun node."
   "Major mode for editing BICEP, powered by tree-sitter."
   :group 'bicep-mode
 
-  (when (treesit-ready-p 'bicep)
+  (if (not (treesit-ready-p 'bicep))
+      (message "Please run `M-x treesit-install-language-grammar RET bicep'")
     (treesit-parser-create 'bicep)
 
     ;; Comments
