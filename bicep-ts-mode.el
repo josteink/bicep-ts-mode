@@ -1,6 +1,6 @@
 ;;; bicep-ts-mode.el --- tree-sitter support for Bicep  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2023-2024 Free Software Foundation, Inc.
+;; Copyright (C) 2023-2025 Free Software Foundation, Inc.
 
 ;; Author     : Jostein Kjønigsen <jostein@kjonigsen.net>
 ;; Maintainer : Jostein Kjønigsen <jostein@kjonigsen.net>
@@ -45,13 +45,13 @@
 (defcustom bicep-ts-mode-indent-offset 2
   "Number of spaces for each indentation step in `bicep-ts-mode'."
   :type 'natnum
-  :safe 'natnump
-  :group 'bicep)
+  :safe #'natnump)
 
 (defcustom bicep-ts-mode-default-langserver-path "$HOME/.vscode/extensions/ms-azuretools.vscode-bicep-*/bicepLanguageServer/Bicep.LangServer.dll"
-  "Default expression used to locate Bicep Languageserver.  If found, added to eglot."
-  :type 'string
-  :group 'bicep)
+  ;; FIXME: Document the ability to use $ENV vars and glob patterns?
+  "Default expression used to locate Bicep Languageserver.
+If found, added to eglot."
+  :type 'string)
 
 (defvar bicep-ts-mode-syntax-table
   (let ((table (make-syntax-table)))
@@ -147,6 +147,7 @@
   "Font-lock settings for BICEP.")
 
 (defun bicep-langserver-path ()
+  ;; Note: In GNU land, we call this a file name, not a path.
   (car (file-expand-wildcards
         (substitute-in-file-name bicep-ts-mode-default-langserver-path))))
 
@@ -157,20 +158,29 @@ Return nil if there is no name or if NODE is not a defun node."
     (when defun-node
       (treesit-node-text
        (treesit-node-child defun-node 1)
-       t)))))
+       t))))
 
 (defun bicep-ts-mode--find-declaration-node (node)
-  "Recursively search up the tree from NODE for a node whose type contains 'declaration'.
+  "Search up the tree from NODE for a node whose type contains `declaration'.
 Return the first matching node, or nil if none is found."
   (when node
     (if (string-match-p "declaration" (treesit-node-type node))
         node
+      ;; FIXME: Recursion is elegant, but ELisp's implementation handles
+      ;; it rather poorly, so it's best avoided when not too hard.
+      ;; Maybe use `named-let', which does TCO?
+      ;;
+      ;;    (named-let loop ((node node))
+      ;;      (if (string-match-p "declaration" (treesit-node-type node))
+      ;;          node
+      ;;        (loop (treesit-node-parent node))))
+      ;;
+      ;; [ Needs (eval-when-compile (require 'subr-x)) ]
       (bicep-ts-mode--find-declaration-node (treesit-node-parent node)))))
 
 ;;;###autoload
 (define-derived-mode bicep-ts-mode prog-mode "Bicep"
   "Major mode for editing BICEP, powered by tree-sitter."
-  :group 'bicep-mode
 
   (if (not (treesit-ready-p 'bicep))
       (message "Please run `M-x treesit-install-language-grammar RET bicep'")
@@ -222,11 +232,11 @@ Return the first matching node, or nil if none is found."
                                        . bicep-ts-mode))))
 
 ;;;###autoload
-(eval-after-load 'eglot
-  '(and (file-exists-p (bicep-langserver-path))
-        (progn
-          (add-to-list 'eglot-server-programs
-                       `(bicep-ts-mode . ("dotnet" ,(bicep-langserver-path)))))))
+(with-eval-after-load 'eglot
+  (defvar eglot-server-programs)
+  (and (file-exists-p (bicep-langserver-path))
+       (add-to-list 'eglot-server-programs
+                    `(bicep-ts-mode . ("dotnet" ,(bicep-langserver-path))))))
 
 (provide 'bicep-ts-mode)
 
