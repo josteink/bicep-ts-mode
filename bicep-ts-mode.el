@@ -160,23 +160,21 @@ Return nil if there is no name or if NODE is not a defun node."
        (treesit-node-child defun-node 1)
        t))))
 
+;; required due to named-let.
+(eval-when-compile (require 'subr-x))
 (defun bicep-ts-mode--find-declaration-node (node)
   "Search up the tree from NODE for a node whose type contains `declaration'.
 Return the first matching node, or nil if none is found."
-  (when node
-    (if (string-match-p "declaration" (treesit-node-type node))
-        node
-      ;; FIXME: Recursion is elegant, but ELisp's implementation handles
-      ;; it rather poorly, so it's best avoided when not too hard.
-      ;; Maybe use `named-let', which does TCO?
-      ;;
-      ;;    (named-let loop ((node node))
-      ;;      (if (string-match-p "declaration" (treesit-node-type node))
-      ;;          node
-      ;;        (loop (treesit-node-parent node))))
-      ;;
-      ;; [ Needs (eval-when-compile (require 'subr-x)) ]
-      (bicep-ts-mode--find-declaration-node (treesit-node-parent node)))))
+
+  ;; Recursion is elegant, but ELisp's implementation handles
+  ;; it rather poorly, so it's best avoided when not too hard.
+  ;; Instead use  `named-let', which does TCO?
+  ;; NOTE: requires subr-x.
+  (named-let loop ((node node))
+    (when node
+      (if (string-match-p "declaration" (treesit-node-type node))
+          node
+        (loop (treesit-node-parent node))))))
 
 ;;;###autoload
 (define-derived-mode bicep-ts-mode prog-mode "Bicep"
