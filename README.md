@@ -1,5 +1,7 @@
 # bicep-ts-mode
 
+[![CI](https://github.com/josteink/bicep-ts-mode/actions/workflows/ci.yml/badge.svg)](https://github.com/josteink/bicep-ts-mode/actions/workflows/ci.yml)
+
 [Bicep](https://github.com/Azure/bicep)-support for [GNU
 Emacs](https://www.gnu.org/software/emacs/), powered by the
 [tree-sitter](https://tree-sitter.github.io/tree-sitter/) parser library.
