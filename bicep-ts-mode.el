@@ -79,7 +79,7 @@ If found, added to eglot."
   '("var" "param" "resource" "func"
     "module" "type" "metadata"
     "targetScope" "output"
-    "for" "in" "using" "existing")
+    "for" "in" "using" "existing" "if")
   "Bicep keywords for tree-sitter font-locking.")
 
 (defvar bicep-ts-mode--font-lock-settings
