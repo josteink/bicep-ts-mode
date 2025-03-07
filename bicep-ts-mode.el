@@ -115,25 +115,27 @@ If found, added to eglot."
      (module_declaration
       (identifier) @font-lock-variable-name-face)
      (for_statement
-      (identifier) @font-lock-variable-name-face)
+      initializer: (identifier) @font-lock-variable-name-face)
+     (for_statement
+      (identifier) @font-lock-variable-use-face)
      (output_declaration
       (identifier) @font-lock-variable-name-face)
      (object_property
       (identifier)
       ":"
-      (identifier) @font-lock-variable-name-face
+      (identifier) @font-lock-variable-use-face
       )
      (interpolation
-      (identifier) @font-lock-variable-name-face)
+      (identifier) @font-lock-variable-use-face)
      (arguments
-      (identifier) @font-lock-variable-name-face)
+      (identifier) @font-lock-variable-use-face)
      (member_expression
-      object: (identifier) @font-lock-variable-name-face)
+      object: (identifier) @font-lock-variable-use-face)
      (if_statement
       (parenthesized_expression
-       (identifier) @font-lock-variable-name-face))
+       (identifier) @font-lock-variable-use-face))
      (array
-      (identifier) @font-lock-variable-name-face))
+      (identifier) @font-lock-variable-use-face))
 
    :language 'bicep
    :feature 'number
