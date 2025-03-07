@@ -121,9 +121,14 @@ If found, added to eglot."
      (output_declaration
       (identifier) @font-lock-variable-name-face)
      (object_property
-      (identifier)
+      (identifier) @font-lock-property-name-face
       ":"
       (identifier) @font-lock-variable-use-face
+      )
+     (object_property
+      (identifier) @font-lock-property-name-face
+      ":"
+      [(array) (string) (object) (member_expression)]
       )
      (interpolation
       (identifier) @font-lock-variable-use-face)
@@ -149,6 +154,8 @@ If found, added to eglot."
    :language 'bicep
    :feature 'string
    '((string_content) @font-lock-string-face
+     (interpolation
+      ["${" "}"] @font-lock-misc-punctuation-face)
      (escape_sequence) @font-lock-escape-face)
 
    :language 'bicep
