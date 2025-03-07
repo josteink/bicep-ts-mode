@@ -116,8 +116,21 @@ If found, added to eglot."
      (output_declaration
       (identifier) @font-lock-variable-name-face)
      (object_property
+      (identifier)
+      ":"
+      (identifier) @font-lock-variable-name-face
+      )
+     (interpolation
       (identifier) @font-lock-variable-name-face)
-     )
+     (arguments
+      (identifier) @font-lock-variable-name-face)
+     (member_expression
+      object: (identifier) @font-lock-variable-name-face)
+     (if_statement
+      (parenthesized_expression
+       (identifier) @font-lock-variable-name-face))
+     (array
+      (identifier) @font-lock-variable-name-face))
 
    :language 'bicep
    :feature 'number
