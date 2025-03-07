@@ -99,6 +99,9 @@ If found, added to eglot."
    :language 'bicep
    :feature 'definition
    '((type) @font-lock-type-face
+     (resource_declaration
+      (string
+       (string_content) @font-lock-type-face))
      (parameter_declaration
       (identifier) @font-lock-variable-name-face)
      (variable_declaration
