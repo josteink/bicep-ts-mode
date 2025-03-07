@@ -154,6 +154,8 @@ If found, added to eglot."
       function: (identifier) @font-lock-function-call-face)
      (call_expression
       function: (member_expression (identifier)) @font-lock-function-name-face)
+     (call_expression
+      function: (member_expression (property_identifier) @font-lock-function-name-face))
      )
 
    :language 'bicep
