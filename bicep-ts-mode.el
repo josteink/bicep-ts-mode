@@ -144,7 +144,8 @@ If found, added to eglot."
 
    :language 'bicep
    :feature 'string
-   '((string_content) @font-lock-string-face)
+   '((string_content) @font-lock-string-face
+     (escape_sequence) @font-lock-escape-face)
 
    :language 'bicep
    :feature 'boolean
