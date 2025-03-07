@@ -134,6 +134,10 @@ If found, added to eglot."
      (if_statement
       (parenthesized_expression
        (identifier) @font-lock-variable-use-face))
+     (if_statement
+      (parenthesized_expression
+       (binary_expression
+        (identifier) @font-lock-variable-use-face)))
      (array
       (identifier) @font-lock-variable-use-face))
 
