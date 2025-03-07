@@ -123,8 +123,7 @@ If found, added to eglot."
      (object_property
       (identifier) @font-lock-property-name-face
       ":"
-      (identifier) @font-lock-variable-use-face
-      )
+      (identifier) @font-lock-variable-use-face)
      (object_property
       (identifier) @font-lock-property-name-face
       ":"
@@ -139,10 +138,8 @@ If found, added to eglot."
      (if_statement
       (parenthesized_expression
        (identifier) @font-lock-variable-use-face))
-     (if_statement
-      (parenthesized_expression
-       (binary_expression
-        (identifier) @font-lock-variable-use-face)))
+     (binary_expression
+      (identifier) @font-lock-variable-use-face)
      (array
       (identifier) @font-lock-variable-use-face))
 
