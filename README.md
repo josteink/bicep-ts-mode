@@ -39,7 +39,7 @@ package-manager, so you will have to install both manually.
    following use-package statement might also work:
 
 ```lisp
-(use-package structurizr-ts-mode
+(use-package bicep-ts-mode
   :ensure t
   :vc ( :url "https://github.com/josteink/bicep-ts-mode"
         :rev :newest))
