@@ -86,7 +86,9 @@ If found, added to eglot."
   (treesit-font-lock-rules
    :language 'bicep
    :feature 'comment
-   '((comment) @font-lock-comment-face)
+   '((comment) @font-lock-comment-face
+     ((identifier) @font-lock-constant-face
+      (:equal "az" @font-lock-constant-face)))
 
    :language 'bicep
    :feature 'delimiter
