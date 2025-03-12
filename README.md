@@ -11,9 +11,9 @@ Emacs](https://www.gnu.org/software/emacs/), powered by the
 - Syntax highlighting
 - Indentation
 - Imenu-support, when LSP not configured
-- Automatic eglot-configuration, if Bicep Langserver found with
-  configurable default search-location (by default it looks for
-  location installed by VSCode Bicep-extension)
+- Automatic LSP langserver installation and eglot-configuration (`M-x
+  bicep-install-langserver`) with configurable search-location when
+  not using default install.
 
 ## Prerequisites
 
@@ -44,6 +44,9 @@ package-manager, so you will have to install both manually.
   :vc ( :url "https://github.com/josteink/bicep-ts-mode"
         :rev :newest))
 ```
+
+4. Use `M-x bicep-install-langserver` to install or update to latest
+   langserver version.
 
 If you have any issues or corrections, feel free to provide a PR to
 help others :)
