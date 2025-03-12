@@ -63,13 +63,13 @@ If found, added to eglot.
 Changes may require an Emacs-restart to take effect."
   :type 'string)
 
-(defvar bicep-ts-mode-syntax-table
+(defvar bicep-ts-mode--syntax-table
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?=  "."   table)
     (modify-syntax-entry ?:  "."   table)
     (modify-syntax-entry ?'  "\""  table)
-    (modify-syntax-entry ?\' "\""  table)
-    (modify-syntax-entry ?\n "> b" table)
+    (modify-syntax-entry ?\" "."  table)
+    (modify-syntax-entry ?\n ">" table)
 
     ;; Define `//` as a comment starter
     (modify-syntax-entry ?/ ". 12" table)
@@ -277,6 +277,7 @@ Return the first matching node, or nil if none is found."
 ;;;###autoload
 (define-derived-mode bicep-ts-mode prog-mode "Bicep"
   "Major mode for editing BICEP, powered by tree-sitter."
+  :syntax-table bicep-ts-mode--syntax-table
 
   (if (not (treesit-ready-p 'bicep))
       (message "Please run `M-x treesit-install-language-grammar RET bicep'")
@@ -316,12 +317,29 @@ Return the first matching node, or nil if none is found."
 
     (treesit-major-mode-setup)))
 
-(defun bicep--insert-single-quote ()
+(defun bicep--insert-quote-dwim ()
   (interactive)
-  (insert-char ?'))
+
+  (let* ((state (syntax-ppss))  ;; Get current syntactic state
+         (in-string (nth 3 state))  ;; Non-nil if inside a string
+         (unterminated (and in-string
+                            (save-excursion
+                              ;;(goto-char string-start)  ;; Move to string start
+                              (not (re-search-forward "'" (line-end-position) t))))))  ;; No closing quote before newline
+    (cond
+     ;; If inside an unterminated string, close it
+     (unterminated
+      (insert "'"))
+     ;; If inside a properly terminated string, allow double-quotes
+     (in-string
+      (insert "\""))
+     ;; Otherwise, insert a single-quote to start a new string
+     (t
+      (insert "'")))))
+
 
 (when bicep-ts-mode-enforce-quotes
-  (define-key bicep-ts-mode-map (kbd "\"") #'bicep--insert-single-quote))
+  (define-key bicep-ts-mode-map (kbd "\"") #'bicep--insert-quote-dwim))
 
 ;; Our treesit-font-lock-rules expect this version of the grammar:
 (add-to-list 'treesit-language-source-alist
