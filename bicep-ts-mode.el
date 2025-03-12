@@ -70,6 +70,11 @@ Changes may require an Emacs-restart to take effect."
     (modify-syntax-entry ?'  "\""  table)
     (modify-syntax-entry ?\' "\""  table)
     (modify-syntax-entry ?\n "> b" table)
+
+    ;; Define `//` as a comment starter
+    (modify-syntax-entry ?/ ". 12" table)
+    ;; Define newline as the comment end
+    ;;(modify-syntax-entry ?\n ">" table)
     table)
   "Syntax table for `bicep-ts-mode'.")
 
