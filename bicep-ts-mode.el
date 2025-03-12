@@ -317,15 +317,34 @@ Return the first matching node, or nil if none is found."
 
     (treesit-major-mode-setup)))
 
-(defun bicep--insert-quote-dwim ()
+;; quote management
+
+(defun bicep--insert-single-quote-dwim ()
   (interactive)
 
-  (let* ((state (syntax-ppss))  ;; Get current syntactic state
-         (in-string (nth 3 state))  ;; Non-nil if inside a string
+  (let* ((state (syntax-ppss))     ;; Get current syntactic state
+         (in-string (nth 3 state)) ;; Non-nil if inside a string
          (unterminated (and in-string
                             (save-excursion
                               ;;(goto-char string-start)  ;; Move to string start
-                              (not (re-search-forward "'" (line-end-position) t))))))  ;; No closing quote before newline
+                              (not (re-search-forward "'" (line-end-position) t)))))) ;; No closing quote before newline
+    (cond
+     (unterminated
+      (insert "'"))
+     (in-string
+      (insert "\\'"))
+     (t
+      (insert "'")))))
+
+(defun bicep--insert-double-quote-dwim ()
+  (interactive)
+
+  (let* ((state (syntax-ppss))     ;; Get current syntactic state
+         (in-string (nth 3 state)) ;; Non-nil if inside a string
+         (unterminated (and in-string
+                            (save-excursion
+                              ;;(goto-char string-start)  ;; Move to string start
+                              (not (re-search-forward "'" (line-end-position) t)))))) ;; No closing quote before newline
     (cond
      ;; If inside an unterminated string, close it
      (unterminated
@@ -339,7 +358,8 @@ Return the first matching node, or nil if none is found."
 
 
 (when bicep-ts-mode-enforce-quotes
-  (define-key bicep-ts-mode-map (kbd "\"") #'bicep--insert-quote-dwim))
+  (define-key bicep-ts-mode-map (kbd "'") #'bicep--insert-single-quote-dwim)
+  (define-key bicep-ts-mode-map (kbd "\"") #'bicep--insert-double-quote-dwim))
 
 ;; Our treesit-font-lock-rules expect this version of the grammar:
 (add-to-list 'treesit-language-source-alist
