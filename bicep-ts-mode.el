@@ -6,7 +6,7 @@
 ;; Maintainer : Jostein Kjønigsen <jostein@kjonigsen.net>
 ;; Created    : December 2023
 ;; Keywords   : bicep languages tree-sitter
-;; Version    : 0.1.3
+;; Version    : 0.1.4
 ;; X-URL      : https://github.com/josteink/bicep-ts-mode
 
 ;; This file is part of GNU Emacs.
@@ -152,8 +152,7 @@ Changes may require an Emacs-restart to take effect."
       (identifier) @font-lock-variable-use-face)
      (member_expression
       object: (identifier) @font-lock-variable-use-face)
-     (member_expression
-      property: (property_identifier) @font-lock-property-use-face)
+     (property_identifier) @font-lock-property-use-face
      (if_statement
       (parenthesized_expression
        (identifier) @font-lock-variable-use-face))
@@ -285,6 +284,7 @@ Return the first matching node, or nil if none is found."
 
     ;; Comments
     (setq-local comment-start "// ")
+    (setq-local comment-start-skip "//+\\s-*")
     (setq-local comment-end "")
 
     ;; Indent.
