@@ -152,6 +152,8 @@ Changes may require an Emacs-restart to take effect."
       (identifier) @font-lock-variable-use-face)
      (member_expression
       object: (identifier) @font-lock-variable-use-face)
+     (member_expression
+      property: (property_identifier) @font-lock-property-use-face)
      (if_statement
       (parenthesized_expression
        (identifier) @font-lock-variable-use-face))
@@ -178,13 +180,13 @@ Changes may require an Emacs-restart to take effect."
 
    :language 'bicep
    :feature 'functions
-   '((call_expression
+   :override t ;; required to override property-use-face in other member-expressions!
+   '(
+     (call_expression
       function: (identifier) @font-lock-function-call-face)
      (call_expression
-      function: (member_expression (identifier)) @font-lock-function-call-face)
-     (call_expression
-      function: (member_expression (property_identifier) @font-lock-function-call-face))
-     )
+      function: (member_expression
+                 property: (property_identifier) @font-lock-function-call-face)))
 
    :language 'bicep
    :feature 'error
