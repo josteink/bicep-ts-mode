@@ -41,7 +41,7 @@
 (declare-function treesit-node-child-by-field-name "treesit.c")
 
 (defgroup bicep nil
-  "Major-mode for editing Bicep-files"
+  "Major-mode for editing Bicep-files."
   :group 'languages)
 
 (defcustom bicep-ts-mode-indent-offset 2
@@ -49,11 +49,18 @@
   :type 'natnum
   :safe #'natnump)
 
+(defcustom bicep-ts-mode-enforce-quotes t
+  "Makes bicep-ts-mode enforce the correct kind of quote when creating strings.
+Changes may require an Emacs-restart to take effect."
+  :type 'boolean
+  :safe #'booleanp)
+
 (defcustom bicep-ts-mode-default-langserver-path
   (expand-file-name ".cache/bicep/Bicep.LangServer.dll" user-emacs-directory)
   ;; FIXME: Document the ability to use $ENV vars and glob patterns?
   "Default expression used to locate Bicep Languageserver.
-If found, added to eglot."
+If found, added to eglot.
+Changes may require an Emacs-restart to take effect."
   :type 'string)
 
 (defvar bicep-ts-mode-syntax-table
@@ -301,6 +308,13 @@ Return the first matching node, or nil if none is found."
                   ("Outputs" "\\`output_declaration\\'" nil nil)))
 
     (treesit-major-mode-setup)))
+
+(defun bicep--insert-single-quote ()
+  (interactive)
+  (insert-char ?'))
+
+(when bicep-ts-mode-enforce-quotes
+  (define-key bicep-ts-mode-map (kbd "\"") #'bicep--insert-single-quote))
 
 ;; Our treesit-font-lock-rules expect this version of the grammar:
 (add-to-list 'treesit-language-source-alist
