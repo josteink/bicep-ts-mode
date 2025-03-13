@@ -140,7 +140,7 @@ Changes may require an Emacs-restart to take effect."
      (object_property
       (identifier) @font-lock-property-name-face
       ":"
-      [(array) (string) (number) (boolean) (object) (member_expression)])
+      [(array) (string) (number) (boolean) (object) (member_expression) (call_expression)])
      (interpolation
       (identifier) @font-lock-variable-use-face)
      (arguments
