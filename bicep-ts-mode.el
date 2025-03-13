@@ -57,24 +57,20 @@ Changes may require an Emacs-restart to take effect."
 
 (defcustom bicep-ts-mode-default-langserver-path
   (expand-file-name ".cache/bicep/Bicep.LangServer.dll" user-emacs-directory)
-  ;; FIXME: Document the ability to use $ENV vars and glob patterns?
   "Default expression used to locate Bicep Languageserver.
-If found, added to eglot.
+If found, added to eglot.  Supports environment-variables and glob-pattterns.
 Changes may require an Emacs-restart to take effect."
   :type 'string)
 
 (defvar bicep-ts-mode--syntax-table
   (let ((table (make-syntax-table)))
-    (modify-syntax-entry ?=  "."   table)
-    (modify-syntax-entry ?:  "."   table)
-    (modify-syntax-entry ?'  "\""  table)
-    (modify-syntax-entry ?\" "."  table)
-    (modify-syntax-entry ?\n ">" table)
-
-    ;; Define `//` as a comment starter
-    (modify-syntax-entry ?/ ". 12" table)
-    ;; Define newline as the comment end
-    ;;(modify-syntax-entry ?\n ">" table)
+    (modify-syntax-entry ?=  "."    table)
+    (modify-syntax-entry ?:  "."    table)
+    (modify-syntax-entry ?\" "."    table)  ;; Double quote as punctuation
+    (modify-syntax-entry ?'  "\""   table)  ;; Single quote as string-delimiter
+    (modify-syntax-entry ?\\ "\\"   table)  ;; Backslash as escape character
+    (modify-syntax-entry ?/  ". 12" table)  ;; Define `//` as a comment starter
+    (modify-syntax-entry ?\n ">"    table)  ;; Newline ends comments
     table)
   "Syntax table for `bicep-ts-mode'.")
 
