@@ -140,7 +140,8 @@ Changes may require an Emacs-restart to take effect."
      (object_property
       (identifier) @font-lock-property-name-face
       ":"
-      [(array) (string) (number) (boolean) (object) (member_expression) (call_expression) (for_statement)])
+      [(array) (string) (number) (boolean) (object) (member_expression) (call_expression)
+       (for_statement) (ternary_expression)])
      (interpolation
       (identifier) @font-lock-variable-use-face)
      (arguments
@@ -157,7 +158,9 @@ Changes may require an Emacs-restart to take effect."
       (identifier) @font-lock-variable-use-face)
      (subscript_expression
       object: (identifier) @font-lock-variable-use-face
-      index: (identifier) @font-lock-variable-use-face))
+      index: (identifier) @font-lock-variable-use-face)
+     (ternary_expression
+      condition: (identifier) @font-lock-variable-use-face))
 
    :language 'bicep
    :feature 'number
