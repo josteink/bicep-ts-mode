@@ -155,7 +155,10 @@ Changes may require an Emacs-restart to take effect."
      (binary_expression
       (identifier) @font-lock-variable-use-face)
      (array
-      (identifier) @font-lock-variable-use-face))
+      (identifier) @font-lock-variable-use-face)
+     (subscript_expression
+      object: (identifier) @font-lock-variable-use-face
+      index: (identifier) @font-lock-variable-use-face))
 
    :language 'bicep
    :feature 'number
