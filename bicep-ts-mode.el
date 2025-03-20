@@ -103,7 +103,7 @@ Changes may require an Emacs-restart to take effect."
 
    :language 'bicep
    :feature 'delimiter
-   '(("=") @font-lock-delimiter-face)
+   '(("=") @font-lock-operator-face)
 
    :language 'bicep
    :feature 'keyword
