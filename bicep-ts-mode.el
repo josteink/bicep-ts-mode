@@ -195,7 +195,8 @@ Changes may require an Emacs-restart to take effect."
   "Font-lock settings for BICEP.")
 
 (defun bicep--fetch-json-array (url)
-  "Fetch JSON from URL, extract first array element, and return PROPERTY."
+  "Fetch JSON from URL, skip headers, and parse buffer as JSON array.
+Return the parsed JSON array."
   (with-current-buffer (url-retrieve-synchronously url t)
     (goto-char (point-min))
     (re-search-forward "\n\n")  ;; Skip headers
@@ -203,7 +204,8 @@ Changes may require an Emacs-restart to take effect."
       json-array)))
 
 (defun bicep--unzip-file (zip-file destination)
-  "Unzip ZIP-FILE into DESTINATION directory using the 'unzip' shell command."
+  "Unzip ZIP-FILE into DESTINATION directory using the 'unzip' shell command.
+Creates DESTINATION directory if it doesn't exist."
   (unless (file-directory-p destination)
     (make-directory destination :parents))  ;; Ensure the destination directory exists
   (let ((exit-code (call-process "unzip" nil nil nil "-o" zip-file "-d" destination)))
@@ -212,12 +214,17 @@ Changes may require an Emacs-restart to take effect."
       (error "Failed to unzip %s (exit code %d)" zip-file exit-code))))
 
 (defun bicep--get-latest-release-version ()
+  "Get the latest release version tag name for Azure Bicep from GitHub API.
+Assumes the first release in the fetched list is the latest."
   (let* ((release-json (bicep--fetch-json-array "https://api.github.com/repos/Azure/bicep/releases"))
          (first        (car release-json)) ;; assume first = latest
          (version      (gethash "tag_name" first)))
     version))
 
 (defun bicep--download-langserver ()
+  "Download and unpack the Bicep language server.
+Determines download URL from the latest release version, downloads the zip,
+unpacks it, and deletes the downloaded zip file."
   (let* ((bicep-dir (expand-file-name ".cache/bicep" user-emacs-directory))
          (download-dir  (expand-file-name "dl" bicep-dir))
          (download-file (expand-file-name "bicep-langserver.zip" download-dir)))
@@ -238,6 +245,8 @@ Changes may require an Emacs-restart to take effect."
   (bicep--register-langserver))
 
 (defun bicep--register-langserver ()
+  "Register the Bicep language server with eglot if server path exists.
+Adds `bicep-ts-mode` and server program to `eglot-server-programs`."
   (defvar eglot-server-programs)
   (and (file-exists-p (bicep-langserver-path))
        (add-to-list 'eglot-server-programs
@@ -245,6 +254,9 @@ Changes may require an Emacs-restart to take effect."
 
 
 (defun bicep-langserver-path ()
+  "Return the path to the Bicep language server DLL.
+Expands wildcards and substitutes in the file name from
+`bicep-ts-mode-default-langserver-path`."
   ;; Note: In GNU land, we call this a file name, not a path.
   (car (file-expand-wildcards
         (substitute-in-file-name bicep-ts-mode-default-langserver-path))))
@@ -321,6 +333,10 @@ Return the first matching node, or nil if none is found."
 ;; quote management
 
 (defun bicep--insert-single-quote-dwim ()
+  "Intelligently insert a single quote.
+If inside an unterminated string, insert a closing single quote.
+If inside a terminated string, insert an escaped single quote.
+Otherwise, insert a single quote to start a new string."
   (interactive)
 
   (let* ((state (syntax-ppss))     ;; Get current syntactic state
@@ -338,6 +354,11 @@ Return the first matching node, or nil if none is found."
       (insert "'")))))
 
 (defun bicep--insert-double-quote-dwim ()
+  "Intelligently insert a double quote.
+If inside an unterminated string (expected to be single-quoted),
+insert a closing single quote. If inside a properly terminated string,
+allow a double quote. Otherwise, insert a single quote to start a
+new string, effectively preferring single quotes for new strings."
   (interactive)
 
   (let* ((state (syntax-ppss))     ;; Get current syntactic state
