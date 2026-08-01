@@ -217,8 +217,13 @@ Changes may require an Emacs-restart to take effect."
          (version      (gethash "tag_name" first)))
     version))
 
+(defun bicep--default-langserver-dir ()
+  (expand-file-name ".cache/bicep" user-emacs-directory))
+(defun bicep--default-langserver-path ()
+  (expand-file-name "Bicep.LangServer.dll" (bicep--default-langserver-dir)))
+
 (defun bicep--download-langserver ()
-  (let* ((bicep-dir (expand-file-name ".cache/bicep" user-emacs-directory))
+  (let* ((bicep-dir (bicep--default-langserver-dir))
          (download-dir  (expand-file-name "dl" bicep-dir))
          (download-file (expand-file-name "bicep-langserver.zip" download-dir)))
     (make-directory bicep-dir :parents)
@@ -240,15 +245,16 @@ Changes may require an Emacs-restart to take effect."
 ;;;###autoload
 (defun bicep--register-langserver ()
   (defvar eglot-server-programs)
-  (and (file-exists-p (bicep-langserver-path))
-       (add-to-list 'eglot-server-programs
-                    `(bicep-ts-mode . ("dotnet" ,(bicep-langserver-path))))))
+    (if (file-exists-p (bicep-langserver-path)) 
+	(add-to-list 'eglot-server-programs
+                     `(bicep-ts-mode . ("dotnet" ,(bicep-langserver-path))))))
 
 
 (defun bicep-langserver-path ()
   ;; Note: In GNU land, we call this a file name, not a path.
-  (car (file-expand-wildcards
-        (substitute-in-file-name bicep-ts-mode-default-langserver-path))))
+  (or (car (file-expand-wildcards
+            (substitute-in-file-name bicep-ts-mode-default-langserver-path)))
+      (bicep--default-langserver-path)))
 
 (defun bicep-ts-mode--defun-name (node)
   "Return the defun name of NODE.
