@@ -32,6 +32,7 @@
 (require 'treesit)
 (require 'json)
 (require 'url)
+(require 'thingatpt)
 
 (declare-function treesit-parser-create "treesit.c")
 (declare-function treesit-induce-sparse-tree "treesit.c")
