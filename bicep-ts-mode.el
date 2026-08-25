@@ -32,6 +32,7 @@
 (require 'treesit)
 (require 'json)
 (require 'url)
+(require 'thingatpt)
 
 (declare-function treesit-parser-create "treesit.c")
 (declare-function treesit-induce-sparse-tree "treesit.c")
@@ -265,6 +266,13 @@ Return nil if there is no name or if NODE is not a defun node."
        (treesit-node-child defun-node 1)
        t))))
 
+(defun bicep-ts-mode--resource-type-symbol-bounds ()
+  (let ((node (treesit-node-at (point))))
+    (when (string-equal (treesit-node-type node) "string_content")
+      (let ((from (treesit-node-start node))
+	    (len (string-match "[ \n\t@]" (treesit-node-text node))))
+	(cons from (if len (+ from len) (treesit-node-end node)))))))
+
 ;; required due to named-let.
 (eval-when-compile (require 'subr-x))
 (defun bicep-ts-mode--find-declaration-node (node)
@@ -323,6 +331,11 @@ Return the first matching node, or nil if none is found."
                   ("Resources" "\\`resource_declaration\\'" nil nil)
                   ("Outputs" "\\`output_declaration\\'" nil nil)))
 
+    ;; thing-at-point
+    (setq-local bounds-of-thing-at-point-provider-alist
+		(cons '(symbol . bicep-ts-mode--resource-type-symbol-bounds)
+		      bounds-of-thing-at-point-provider-alist))
+    
     (treesit-major-mode-setup)))
 
 ;; quote management
